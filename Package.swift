@@ -5,24 +5,61 @@ import PackageDescription
 
 let package = Package(
     name: "YouTube",
+    platforms: [
+        .iOS(.v16)
+    ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "YouTube",
-            targets: ["YouTube"]),
+            name: "AppFeature",
+            targets: [
+                "AppFeature",
+                "DILive"
+            ]
+        ),
+        .library(
+            name: "DI",
+            targets: ["DI"]
+        ),
+        .library(
+            name: "DILive",
+            targets: ["DILive"]
+        ),
+        .library(
+            name: "HomeFeature",
+            targets: ["HomeFeature"]
+        )
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: .init(0, 40, 2))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "YouTube",
-            dependencies: []),
+            name: "AppFeature",
+            dependencies: [
+                "DI",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]),
         .testTarget(
-            name: "YouTubeTests",
-            dependencies: ["YouTube"]),
+            name: "AppFeatureTests",
+            dependencies: ["AppFeature"]
+        ),
+        .target(
+            name: "DI"
+        ),
+        .target(
+            name: "DILive",
+            dependencies: ["DI"]
+        ),
+        .target(
+            name: "HomeFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
+        )
     ]
 )
